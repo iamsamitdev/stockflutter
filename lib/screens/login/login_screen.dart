@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockflutter/utils/utility.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -8,6 +9,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  // สร้างตัวแปรสำหรับไว้ผูกกับแบบฟอร์ม
+  final formKey = GlobalKey<FormState>();
+
+  // ตัวแปรไว้รับค่าจากฟอร์ม
+  String _username, _password;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,43 +39,84 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Container(
-                    color: Colors.white70,
+                    decoration: BoxDecoration(
+                      color: Colors.white70,
+                      borderRadius: BorderRadius.all(Radius.circular(10))
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            autofocus: false,
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(fontSize: 24, color: Colors.teal),
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.person, size: 28,),
-                              labelText: 'Username',
-                              hintText: 'กรุณาป้อนชื่อผู้ใช้'
+                      child: Form(
+                          key: formKey,
+                          child: Column(
+                          children: [
+                            TextFormField(
+                              autofocus: false,
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(fontSize: 24, color: Colors.teal),
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.person, size: 28,),
+                                labelText: 'Username',
+                                hintText: 'กรุณาป้อนชื่อผู้ใช้',
+                                hintStyle: TextStyle(fontSize: 16, color: Colors.black),
+                                errorStyle: TextStyle(fontSize: 16)
+                              ),
+                              validator: (value){
+                                if(value.isEmpty){
+                                  return 'กรุณาป้อนชื่อผู้ใช้ก่อน';
+                                }else{
+                                  return null;
+                                }
+                              },
+                              onSaved: (value){
+                                _username = value.trim();
+                              },
                             ),
-                          ),
-                          TextFormField(
-                            autofocus: false,
-                            obscureText: true,
-                            keyboardType: TextInputType.text,
-                            style: TextStyle(fontSize: 24, color: Colors.teal),
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.lock, size: 28,),
-                              labelText: 'Password',
-                              hintText: 'กรุณาป้อนรหัสผ่าน'
+                            TextFormField(
+                              autofocus: false,
+                              obscureText: true,
+                              keyboardType: TextInputType.text,
+                              style: TextStyle(fontSize: 24, color: Colors.teal),
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.lock, size: 28,),
+                                labelText: 'Password',
+                                hintText: 'กรุณาป้อนรหัสผ่าน',
+                                hintStyle: TextStyle(fontSize: 16, color: Colors.black),
+                                errorStyle: TextStyle(fontSize: 16)
+                              ),
+                              validator: (value){
+                                if(value.isEmpty){
+                                  return 'กรุณาป้อนรหัสผ่านก่อน';
+                                }else{
+                                  return null;
+                                }
+                              },
+                              onSaved: (value){
+                                _password = value.trim();
+                              },
                             ),
-                          ),
-                          SizedBox(height: 24,),
-                          RaisedButton(
-                            onPressed: (){},
-                            child: Padding(
-                              // padding: const EdgeInsets.only(left: 20, right: 20),
-                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                              child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 24),),
-                            ),
-                            color: Colors.green,
-                          )
-                        ],
+                            SizedBox(height: 24,),
+                            RaisedButton(
+                              onPressed: (){
+                                if(formKey.currentState.validate()){
+                                  formKey.currentState.save();
+                                  print("$_username\n$_password");
+                                  if(_username == "admin" && _password == "123456"){
+                                    // ส่งไปหน้า Dashboard
+                                    Navigator.pushReplacementNamed(context, '/dashboard');
+                                  }else{
+                                    Utility().showAlertDialog(context, 'มีข้อผิดพลาด', 'ข้อมูลเข้าระบบไม่ถูกต้อง');
+                                  }
+                                }
+                              },
+                              child: Padding(
+                                // padding: const EdgeInsets.only(left: 20, right: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                                child: Text('Login', style: TextStyle(color: Colors.white, fontSize: 24),),
+                              ),
+                              color: Colors.green,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
