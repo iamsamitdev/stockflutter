@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stockflutter/services/rest_api.dart';
 import 'package:stockflutter/utils/utility.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -96,16 +100,36 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             SizedBox(height: 24,),
                             RaisedButton(
-                              onPressed: (){
+                              onPressed: () async {
                                 if(formKey.currentState.validate()){
                                   formKey.currentState.save();
-                                  print("$_username\n$_password");
-                                  if(_username == "admin" && _password == "123456"){
+
+                                  // ทดสอบเรียกใช้งาน API
+                                  var response = await CallAPI().loginAPI(
+                                    {
+                                      "username": _username,
+                                      "password": _password
+                                    }
+                                  );
+
+                                  var body = json.decode(response.body);
+                                  if(body['status'] == 'success' && body['data']['status'] == '1'){
+                                    
+                                    // สร้าง Ojbect แบบ Sharedprefference
+                                    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+                                    // เก็บค่าที่ต้องการลงในตัวแปรแบบ Sharedprefference
+                                    sharedPreferences.setString('storeID', body['data']['id']);
+                                    sharedPreferences.setString('storeFullname', body['data']['fullname']);
+                                    sharedPreferences.setString('storeImgProfile', body['data']['img_profile']);
+                                    sharedPreferences.setString('storeUsername', body['data']['username']);
+
                                     // ส่งไปหน้า Dashboard
                                     Navigator.pushReplacementNamed(context, '/dashboard');
                                   }else{
                                     Utility().showAlertDialog(context, 'มีข้อผิดพลาด', 'ข้อมูลเข้าระบบไม่ถูกต้อง');
                                   }
+
                                 }
                               },
                               child: Padding(

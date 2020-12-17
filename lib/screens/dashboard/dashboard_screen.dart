@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stockflutter/screens/bottomnavmenu/account/account_screen.dart';
 import 'package:stockflutter/screens/bottomnavmenu/home/home_screen.dart';
 import 'package:stockflutter/screens/bottomnavmenu/notification/notification_screen.dart';
@@ -13,6 +14,28 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
+  // สร้าง Ojbect แบบ Sharedprefference
+  SharedPreferences sharedPreferences;
+
+  // สร้างตัวแปรไว้อ่านข้อมูลจาก Sharedprefference
+  String _fullname, _imgprofile, _username;
+
+  // สร้างฟังก์ชันแบบ Async เพื่ออ่านข้อมูล sharedPreferences
+  checkLogin() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      _fullname = sharedPreferences.getString('storeFullname');
+      _imgprofile = sharedPreferences.getString('storeImgProfile');
+      _username = sharedPreferences.getString('storeUsername');
+    });
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    checkLogin();
+  }
 
   // สร้างตัวแปรแบบ list เก็บรายการหน้าของ tab bottom
   int _currentIndex = 0;
@@ -63,10 +86,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('assets/images/avatar.jpg'),
+                backgroundImage: 
+                NetworkImage(
+                  'http://localhost:8000/stockflutter_api/public/images/profile/$_imgprofile'
+                ),
               ),
-              accountName: Text('Samit Koyom'),
-              accountEmail: Text('samit@gmail.com'),
+              accountName: Text('$_fullname'),
+              accountEmail: Text('$_username'),
               decoration: BoxDecoration(
                   color: Colors.deepPurple,
                   image: DecorationImage(
@@ -97,7 +123,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('ออกจากระบบ'),
-              onTap: () {},
+              onTap: () async {
+                // เคลียร์ SharedPrefferences
+                await sharedPreferences.clear();
+                // ส่งไปหน้า login
+                Navigator.pushReplacementNamed(context, '/login');
+              },
             ),
           ],
         ),
