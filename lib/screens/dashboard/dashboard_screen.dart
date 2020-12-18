@@ -88,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               currentAccountPicture: CircleAvatar(
                 backgroundImage: 
                 NetworkImage(
-                  'http://localhost:8000/stockflutter_api/public/images/profile/$_imgprofile'
+                  'https://www.itgenius.co.th/sandbox_api/cpallstockapi/public/images/profile/$_imgprofile'
                 ),
               ),
               accountName: Text('$_fullname'),
@@ -96,7 +96,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               decoration: BoxDecoration(
                   color: Colors.deepPurple,
                   image: DecorationImage(
-                      image: AssetImage('assets/images/greenbg3.jpg'),
+                      image: AssetImage('assets/images/bg_acc.jpg'),
                       fit: BoxFit.fill)),
             ),
             ListTile(
@@ -125,9 +125,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
               title: Text('ออกจากระบบ'),
               onTap: () async {
                 // เคลียร์ SharedPrefferences
-                await sharedPreferences.clear();
+                // await sharedPreferences.clear();
+                sharedPreferences.setInt('storeStep', 2);
                 // ส่งไปหน้า login
-                Navigator.pushReplacementNamed(context, '/login');
+                Navigator.pushReplacementNamed(context, '/lockscreen');
               },
             ),
           ],

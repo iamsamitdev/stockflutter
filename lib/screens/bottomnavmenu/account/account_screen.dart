@@ -14,6 +14,9 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
 
+  // สร้างตัวแปรไว้เก็บชื่อ และรูปโปรไฟล์
+  String _fullname, _username, _avatar;
+
   SharedPreferences sharedPreferences;
 
   // เรียกใช้งาน Model
@@ -30,8 +33,12 @@ class _AccountScreenState extends State<AccountScreen> {
       var response = await CallAPI().getProfile(sharedPreferences.getString('storeID'));
       setState(() {
         userModel = response;
+        _fullname = userModel.fullname;
+        _username = userModel.username;
+        _avatar = userModel.imgProfile;
       });
-      print(userModel.fullname);      
+      print(userModel.fullname);
+      print(userModel.imgProfile);   
     }
   }
 
@@ -48,20 +55,80 @@ class _AccountScreenState extends State<AccountScreen> {
         children: [
           Container(
             height: 200,
-            color: Colors.teal,
+            decoration: BoxDecoration(
+               image: DecorationImage(
+                 image: AssetImage('assets/images/bg_acc.jpg'),
+                 fit: BoxFit.cover
+               )
+             ),
+
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'http://localhost:8000/stockflutter_api/public/images/profile/admin.jpg',
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: CircleAvatar(
+                    radius: 50.0,
+                    backgroundColor: Colors.white,
+                    child:_avatar != null ? CircleAvatar(
+                      radius: 46.0,
+                      // backgroundImage: AssetImage('assets/images/samit_profile.jpg'),
+                      backgroundImage: NetworkImage(
+                        'https://www.itgenius.co.th/sandbox_api/cpallstockapi/public/images/profile/'+_avatar,
+                      ),
+                    ): CircularProgressIndicator(),
                   ),
-                  radius: 50,
                 ),
-                Text('Samit Koyom', style: TextStyle(color: Colors.white, fontSize: 24),),
-                Text('Administrator', style: TextStyle(color: Colors.white, fontSize: 16),),
+                Text('$_fullname', style: TextStyle(color: Colors.white, fontSize: 24),),
+                Text('$_username', style: TextStyle(color: Colors.white, fontSize: 16),),
               ],
             ),
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('ข้อมูลผู้ใช้'),
+            trailing: Icon(Icons.navigate_next),
+            onTap: (){},
+          ),
+          ListTile(
+            leading: Icon(Icons.lock),
+            title: Text('เปลี่ยนรหัสผ่าน'),
+            trailing: Icon(Icons.navigate_next),
+            onTap: (){},
+          ),
+          ListTile(
+            leading: Icon(Icons.language),
+            title: Text('เปลี่ยนภาษา'),
+            trailing: Icon(Icons.navigate_next),
+            onTap: (){},
+          ),
+          ListTile(
+            leading: Icon(Icons.email),
+            title: Text('ติดต่อทีมงาน'),
+            trailing: Icon(Icons.navigate_next),
+            onTap: (){},
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('ตั้งค่าใช้งาน'),
+            trailing: Icon(Icons.navigate_next),
+            onTap: (){},
+          ),
+           ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('ออกจากระบบ'),
+            trailing: Icon(Icons.navigate_next),
+            onTap: () async {
+              // สร้าง Object แบบ Sharedprefference
+              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+              // เก็บค่าลงตัวแปรแบบ SharedPrefference
+              sharedPreferences.setInt('storeStep', 2);
+
+              // เมื่อทำการเรียกไปหน้าสุด
+              // ส่งไปหน้า login
+              Navigator.pushReplacementNamed(context, '/lockscreen');
+            },
           )
         ],
       ),
