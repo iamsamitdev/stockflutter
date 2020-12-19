@@ -78,6 +78,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('$_title'),
+        actions: [
+          InkWell(
+            onTap: (){
+              Navigator.pushNamed(context, '/qrcode');
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right:15.0),
+              child: Row(
+                children: [
+                  Icon(Icons.center_focus_strong),
+                  Text(' SCAN')
+                ],
+              ),
+            ),
+          )
+        ],
       ),
       body: _children[_currentIndex],
       drawer: SafeArea(

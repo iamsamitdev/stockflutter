@@ -9,6 +9,8 @@ import 'package:stockflutter/screens/lockscreen/lockscreen.dart';
 import 'package:stockflutter/screens/login/login_screen.dart';
 import 'package:stockflutter/screens/newsdetail/newsdetail_screen.dart';
 import 'package:stockflutter/screens/onboarding/onboarding_screen.dart';
+import 'package:stockflutter/screens/qrcode/qrcode_screen.dart';
+import 'package:stockflutter/screens/qrcode/resultscan_screen.dart';
 import 'package:stockflutter/screens/register/register_screen.dart';
 
 // สร้างตัวแปรแบบ Map ไว้เก็บ URL และ Screen
@@ -23,5 +25,7 @@ Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   "/contact":(BuildContext context) => ContactScreen(),
   "/newsdetail":(BuildContext context) => NewsDetailScreen(),
   "/addproduct":(BuildContext context) => AddProductScreen(),
-  "/editproduct":(BuildContext context) => EditProductScreen()
+  "/editproduct":(BuildContext context) => EditProductScreen(),
+  "/qrcode":(BuildContext context) => QRCodeScreen(),
+  "/resultscan":(BuildContext context) => ResultScanScfeen()
 };
