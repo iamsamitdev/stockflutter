@@ -92,40 +92,49 @@ class _NewsScreenState extends State<NewsScreen> {
         // ออกแบบส่วนหน้าตาของการแสดงผล listview
         return Container(
           width: MediaQuery.of(context).size.width * 0.60,
-          child: Card(
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 125.0,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(newsModel.imageurl),
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter
-                      )
+          child: InkWell(
+            onTap: (){
+              Navigator.pushNamed(
+                context, 
+                '/newsdetail',
+                arguments: {'id': newsModel.id}
+              );
+            },
+            child: Card(
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 125.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(newsModel.imageurl),
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter
+                        )
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          newsModel.topic,
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          newsModel.detail,
-                          style: TextStyle(fontSize: 16),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            newsModel.topic,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            newsModel.detail,
+                            style: TextStyle(fontSize: 16),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -147,7 +156,13 @@ class _NewsScreenState extends State<NewsScreen> {
           leading: Icon(Icons.pages),
           title: Text(newsModel.topic, overflow: TextOverflow.ellipsis,),
           subtitle: Text(newsModel.detail, overflow: TextOverflow.ellipsis,),
-          onTap: (){},
+          onTap: (){
+            Navigator.pushNamed(
+                context, 
+                '/newsdetail',
+                arguments: {'id': newsModel.id}
+            );
+          },
         );
       }
     );

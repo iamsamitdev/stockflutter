@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:stockflutter/models/NewsDetailModel.dart';
 import 'package:stockflutter/models/NewsModel.dart';
+import 'package:stockflutter/models/ProductModel.dart';
 import 'package:stockflutter/models/UserModel.dart';
 
 class CallAPI {
@@ -77,6 +78,60 @@ class CallAPI {
       return newsDetailModelFromJson(response.body);
     }else{
       return null;
+    }
+  }
+
+  // ส่วนของการ CRUD Product
+  // Get All Products
+  Future<List<ProductModel>> getProducts() async {
+    final response = await http.get(baseAPIURL + "products", headers: _setHeaders());
+    if(response.statusCode == 200){
+      return productModelFromJson(response.body);
+    }else{
+      return null;
+    }
+  }
+
+  // Create Products
+  Future<bool> createProduct(ProductModel data) async {
+    final response = await http.post(
+      baseAPIURL + "products",
+      headers: _setHeaders(),
+      body: productModelToJson(data)
+    );
+
+    if(response.statusCode == 200){
+      return true;
+    }else{
+      return false;
+    }
+
+  }
+
+  // Update Products
+  Future<bool> updateProduct(ProductModel data) async {
+    final response = await http.put(
+      baseAPIURL+"products/${data.id}",
+      headers: _setHeaders(),
+      body: productModelToJson(data),
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // Delete Products
+  Future<bool> deleteProduct(String id) async {
+    final response = await http.delete(
+      baseAPIURL+"products/$id",
+      headers: _setHeaders()
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
   }
 
